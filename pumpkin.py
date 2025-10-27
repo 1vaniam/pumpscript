@@ -10,11 +10,11 @@ start_x = mine.player_position()
 random_time = [18.7, 18]
 hold_time = random.choice(random_time)
 
-loops = 63
+loops = 63 # 1 loop contains 1 moving right and 1 moving left 
 target_yaw = 90.0
 target_pitch = -57.0
 next_loop = 5.0
-tolerance = 12.0
+tolerance = 12.0 # x level coordinate tolerance to trigger tp_detect
 stuck_limit = 8.0
 last_position = start_x
 lastmove_time = time.time()
@@ -22,8 +22,8 @@ lastmove_time = time.time()
 safe_tp = False
 sudden_threshold = 5.0
 
-chat_options = ["hello", "ayo", "hi po", "wut", "bat ako natp", "huh"]
-look_random = random.uniform(0.5, 1.0)
+chat_options = ["words"] # words or phrases that will chat when functions are triggered
+look_random = random.uniform(0.5, 1.0) # delay for each rotation
 message = random.choice(chat_options)
 
 mine.echo(f"Start position recorded at: {start_x}")
@@ -64,7 +64,7 @@ def stuck():
             mine.chat(message)
             running = False
             for _ in range(1):
-                rotate.look_at_random_block()
+                rotate.look_at_random_block() #look at a random x, y, z coordinate in a humane way
                 time.sleep(look_random)
             mine.execute("\suspend")
 
@@ -81,7 +81,7 @@ def tp_detect():
 
         if abs(x[0] - start_x[0]) > tolerance:
             mine.player_press_attack(False)
-            mine.echo("gumalaw ka boi")
+            mine.echo("you moved")
 
             mine.player_press_forward(False)
             time.sleep(0.1)
@@ -98,7 +98,7 @@ def tp_detect():
             mine.chat(message)
             running = False
             for _ in range(1):
-                rotate.look_at_random_block()
+                rotate.look_at_random_block() # look at a random x, y, z coordinate in a humane way
                 time.sleep(look_random)
             mine.execute("\suspend")
 
@@ -126,7 +126,7 @@ def sudden_move():
             mine.echo(f"bro got tped")
 
             mine.player_press_attack(False)
-            mine.echo("gumalaw ka boi")
+            mine.echo("you moved.")
 
             mine.player_press_forward(False)
             safe_sleep(0.1)
@@ -139,16 +139,16 @@ def sudden_move():
 
             mine.player_press_attack(False)
 
-            mine.chat("whut")
+            mine.chat("chat")
             safe_sleep(1.5)
-            mine.chat("kanina pa to ah")
+            mine.chat("chat")
             safe_sleep(0.5)
 
             for _ in range(2):
                 rotate.look_at_random_block()
                 safe_sleep(look_random)
 
-            mine.execute("/home pump")
+            mine.execute("/home") # a command to your starting point of the farm to loop
             running = False
             mine.execute("\suspend")
             break
@@ -180,17 +180,17 @@ def farm_loop():
 
             
             mine.player_press_forward(True)
-            mine.echo(f"LOOOOOOOOOOOOOOOP numba: {i + 1}")
+            mine.echo(f"LOOP numba: {i + 1}")
 
             if (i + 1) % 3 == 0:
-                mine.execute("/sellall PUMPKIN")
+                mine.execute("/sellall PUMPKIN") # command to sell pumpkins in your inventory
                 mine.echo(f"sold pumpkin: {i + 1} times")
 
         safe_tp = True
 
         mine.player_press_forward(False)
         mine.echo("FINISHED LOOPING")
-        mine.execute("/home pump")
+        mine.execute("/command") # a command to your starting point of the farm to loop
 
         safe_sleep(5.0)
         safe_tp = False
