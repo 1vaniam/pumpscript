@@ -66,8 +66,14 @@ def stuck():
             for _ in range(1):
                 rotate.look_at_random_block() #look at a random x, y, z coordinate in a humane way
                 time.sleep(look_random)
-            mine.execute("\suspend")
-
+        
+            if random.random() < 0.5:
+                mine.execute("/home pump")
+            safe_sleep(1.0)
+            
+            if random.random() < 0.5:
+                mine.execute("\suspend")  
+        
             break
         safe_sleep(1)
 
@@ -100,7 +106,13 @@ def tp_detect():
             for _ in range(1):
                 rotate.look_at_random_block() # look at a random x, y, z coordinate in a humane way
                 time.sleep(look_random)
-            mine.execute("\suspend")
+                
+            if random.random() < 0.5:
+                mine.execute("/home pump")
+            safe_sleep(1.0)
+            
+            if random.random() < 0.5:
+                mine.execute("\suspend")
 
             break
 
@@ -150,7 +162,13 @@ def sudden_move():
 
             mine.execute("/home") # a command to your starting point of the farm to loop
             running = False
-            mine.execute("\suspend")
+
+            if random.random() < 0.5:
+                mine.execute("/home pump")
+            safe_sleep(1.0)
+            if random.random() < 0.5:
+                mine.execute("\suspend")
+                
             break
 
         prev = now
