@@ -7,7 +7,7 @@ from minescript_plus import Util
 
 start_x = mine.player_position()
 
-random_time = [18.7, 18]
+random_time = [22.7, 22.9]
 hold_time = random.choice(random_time)
 
 loops = 63 # 1 loop contains 1 moving right and 1 moving left 
@@ -177,6 +177,10 @@ def sudden_move():
 def farm_loop():
     global running, safe_tp
 
+    pause_chance = 0.1  #10% chance to trigger
+    pause_min = 2.0     
+    pause_max = 6.0     
+
     while running:
         mine.player_set_orientation(target_yaw, target_pitch)
         mine.player_press_forward(True)
@@ -186,18 +190,40 @@ def farm_loop():
             if not running:
                 break
 
+            #move right
             mine.player_press_right(True)
-            safe_sleep(hold_time)
-            safe_sleep(0.1)
+            start_time = time.time()
+            while running and (time.time() - start_time) < hold_time:
+                safe_sleep(0.1)
+                # Random chance to pause mid-move
+                if random.random() < pause_chance:
+                    pause_time = random.uniform(pause_min, pause_max)
+                    mine.echo(f"Pausing mid-right move for {pause_time:.1f}s")
+                    mine.player_press_right(False)
+                    mine.player_press_attack(False)
+                    safe_sleep(pause_time)
+                    mine.player_press_attack(True)
+                    mine.player_press_right(True)
             mine.player_press_right(False)
+            safe_sleep(0.1)
 
-            mine.player_press_left(True)
-            safe_sleep(hold_time)
-            safe_sleep(0.2)
+            #move left
+             mine.player_press_left(True)
+            start_time = time.time()
+            while running and (time.time() - start_time) < hold_time:
+                safe_sleep(0.1)
+                if random.random() < pause_chance:
+                    pause_time = random.uniform(pause_min, pause_max)
+                    mine.echo(f"Pausing mid-left move for {pause_time:.1f}s")
+                    mine.player_press_left(False)
+                    mine.player_press_attack(False)
+                    safe_sleep(pause_time)
+                    mine.player_press_attack(True)
+                    mine.player_press_left(True)
             mine.player_press_left(False)
+            safe_sleep(0.2)
 
             
-            mine.player_press_forward(True)
             mine.echo(f"LOOP numba: {i + 1}")
 
             if (i + 1) % 3 == 0:
